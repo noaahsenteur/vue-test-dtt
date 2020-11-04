@@ -1,53 +1,78 @@
+<!-- Template goes here -->
 <template>
     <div class="content-wrap">
-        <div class="post-wrap center-item">
-            <div class="post-detail">
-            <div class="head-content">
-                <h1>
-                    {{ post.title }}
-                </h1>
-            </div>
-            <div class="body-content">
-                <p>
-                    {{ post.body }}
-                </p>
+
+        <div class="post-wrap center-item b-row">
+            <b-col lg="6">
+                <div class="post-detail">
+                        
+                    <div class="head-content">
+                            {{ post.title }}
+                    </div>
+
+                    <div class="body-content">
+                        <p>
+                            {{ post.body }}
+                        </p>
+                    </div>
+
                 </div>
-            </div>
+            </b-col>
         </div>
-        <div class="post-comments">
+
+        <div class="post-comments-wrap">
+
             <div class="title">
-                <h3> Gerelateerde comments </h3>
-                <post-comments v-for="(comment, index) in comments" :email="comment.email" :content="comment.body" :key="index"></post-comments>
+                Gerelateerde comments
             </div>
+
+            <div class="comments b-row">
+                <b-col lg="6" v-for="(comment, index) in comments.slice(0,3)" :key="index">
+                    <post-comments :email="comment.email" :content="comment.body" :date="new Date().toLocaleString()"></post-comments>
+                </b-col>
+            </div>
+
         </div>
+
     </div>
 </template>
 
 <script lang="ts">
+/* Imports */
 import { Vue, Component } from 'vue-property-decorator'
 import Axios from 'axios'
 import Comments from '../components/comment.vue'
 
+/* Components */
 @Component({
     components:{
         'post-comments' : Comments
     }
 })
+
+/* Classes */
 export default class Post extends Vue {
     id: string = this.$route.params.id
     post: object = {}
-    comments: object = {}
+    comments: Array<object> = []
 
 
-     created(){
-          Axios.get('https://jsonplaceholder.typicode.com/posts/' + this.id ).then(response => {
-              this.post = response.data;        
-          })
+    mounted(){
+        /* Pulling data from api */
+        Axios.get('https://jsonplaceholder.typicode.com/posts/' + this.id ).then(response => {
+            this.post = response.data;        
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        })
 
-          Axios.get('https://jsonplaceholder.typicode.com/posts/' + this.id + '/comments').then(response => {
-              this.comments = response.data;
-              console.log(response.data);
-          }); 
+        /* Pulling data from api */
+        Axios.get('https://jsonplaceholder.typicode.com/posts/' + this.id + '/comments').then(response => {
+            this.comments = response.data;
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        })
 
       }
 
@@ -55,26 +80,40 @@ export default class Post extends Vue {
 </script>
 
 <style scoped>
-    .content-wrap .post-detail {
-        width: 50%;
+
+    .content-wrap .post-wrap {
+        margin-bottom: 15px;
+        border-bottom: 1px solid rgba(242, 242, 242, 1);
+        padding-bottom: 30px;
+    }
+
+    .content-wrap .post-wrap .post-detail {
         border-radius: 5px;
         overflow: hidden;
         text-align: center;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
 
-    .content-wrap .post-detail .head-content {
+    .content-wrap .post-wrap .post-detail .head-content {
         padding: 25px;
         color: white;
         background:#6497b1;
     }
 
-    .content-wrap .post-detail .body-content {
+    .content-wrap .post-wrap .post-detail .body-content {
         padding: 25px;
     }
 
-    .content-wrap .post-wrap {
-        margin-bottom: 25px;
+    .content-wrap .post-comments-wrap .title {
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.25em;
+    }
+
+    .content-wrap .post-comments-wrap .comments {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
 </style>

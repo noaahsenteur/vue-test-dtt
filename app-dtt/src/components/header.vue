@@ -1,26 +1,34 @@
+<!-- Template goes here -->
 <template>
+
     <div class="navigation-wrapper">
+
         <ul class="navigation-list">
-            <li class="navigation-item"><router-link to="/" exact>Home</router-link></li>
+            
+            <li class="navigation-item"><router-link to="/home" exact>Home</router-link></li>
             <li class="navigation-item"><router-link to="/categories" exact>Categories</router-link></li>
             <li class="navigation-item"><router-link to="/random" exact>Random</router-link></li>
+
         </ul>
+
     </div>
+
 </template>
 
 <script lang="ts">
+    /* Importing */
     import { Component, Vue }  from 'vue-property-decorator'
+
+    /* Components */
     @Component
+
+    /* Classes */
     export default class Header extends Vue {
 
     }
 </script>
 
 <style scoped>
-
-    .navigation-wrapper {
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-    }
 
     .navigation-wrapper .navigation-list  {
         list-style: none;
@@ -44,6 +52,11 @@
         opacity: 1;
     }
 
+   @media only screen and (max-width:767px){
+        .navigation-wrapper .navigation-list .navigation-item {
+            padding: 10px;
+        }
+    }
 
 
 </style>
